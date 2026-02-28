@@ -1,0 +1,3 @@
+# Application Rules
+
+- **Responsive Design:** This application MUST support all screen sizes, including mobile devices, tablets, and desktops. All UI components, layouts, and pages must be fully responsive using Tailwind CSS utility classes (e.g., `sm:`, `md:`, `lg:`, `xl:`, `2xl:`). Never build a feature that only works on desktop.
