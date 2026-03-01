@@ -28,9 +28,11 @@ import {
   CreditCard,
   RefreshCw,
   User,
-  Calendar
+  Calendar,
+  Camera
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import { format, differenceInMinutes, addMonths, isAfter, isBefore } from "date-fns";
 import { supabase } from "@/lib/supabase";
 import { isAuthenticated, logout, getUserId } from "@/lib/auth";
@@ -113,6 +115,18 @@ export default function ParkingSystem() {
   });
 
   const [loading, setLoading] = useState(true);
+  const [showScanner, setShowScanner] = useState(false);
+
+  // Vehicle Number Formatter (e.g., TN 18 AV 4064)
+  const formatVehicleNumber = (val: string) => {
+    const clean = val.replace(/\s+/g, "").toUpperCase();
+    const parts = [];
+    if (clean.length > 0) parts.push(clean.substring(0, 2));
+    if (clean.length > 2) parts.push(clean.substring(2, 4));
+    if (clean.length > 4) parts.push(clean.substring(4, 6));
+    if (clean.length > 6) parts.push(clean.substring(6, 10));
+    return parts.join(" ");
+  };
 
   // Load data from Supabase
   useEffect(() => {
@@ -219,6 +233,13 @@ export default function ParkingSystem() {
     if (!userId) {
       alert("Authentication error: Please login again");
       router.push('/login');
+      return;
+    }
+
+    // Check for active session duplication
+    const isActive = sessions.find(s => s.vehicleNumber === vehicleNumber && s.status === "active");
+    if (isActive) {
+      alert("This vehicle is already entered in the parking area.");
       return;
     }
 
@@ -401,6 +422,7 @@ export default function ParkingSystem() {
     setSessions(updatedSessions);
     setCurrentBill({ ...session, exitTime, amount, durationMinutes, status: "completed" });
     setExitId("");
+    setShowScanner(false);
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -414,8 +436,75 @@ export default function ParkingSystem() {
     }
   };
 
+  const QRScanner = ({ onScan, onClose }: { onScan: (data: string) => void, onClose: () => void }) => {
+    useEffect(() => {
+      const scanner = new Html5QrcodeScanner(
+        "qr-reader",
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        /* verbose= */ false
+      );
+
+      scanner.render(
+        (data) => {
+          onScan(data);
+          scanner.clear().catch(error => console.error("Failed to clear scanner", error));
+        },
+        (err) => { }
+      );
+
+      return () => {
+        // Use a more reliable way to cleanup
+        const element = document.getElementById("qr-reader");
+        if (element && element.innerHTML !== "") {
+          scanner.clear().catch(error => console.error("Cleanup error", error));
+        }
+      };
+    }, [onScan]);
+
+    return (
+      <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
+        <div className="bg-white rounded-[44px] p-10 w-full max-w-lg shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-2 bg-primary group-hover:h-3 transition-all" />
+          <div className="flex justify-between items-center mb-10">
+            <div>
+              <h2 className="text-3xl font-black text-slate-800">Scan Entry Token</h2>
+              <p className="text-primary text-[10px] font-black tracking-[0.3em] mt-2 text-left uppercase">Scanning active session</p>
+            </div>
+            <button onClick={onClose} className="w-12 h-12 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-500 shadow-sm transition-all focus:scale-95 active:scale-90">
+              <PlusCircle className="rotate-45" size={28} />
+            </button>
+          </div>
+          <div id="qr-reader" className="overflow-hidden rounded-[32px] border-4 border-slate-100 bg-slate-50" />
+          <div className="mt-10 flex items-center gap-4 p-6 bg-blue-50/50 rounded-3xl border border-blue-100">
+            <div className="p-3 bg-blue-100 rounded-2xl text-primary animate-pulse">
+              <QrCode size={24} />
+            </div>
+            <p className="text-[10px] font-bold text-slate-500 leading-relaxed text-left">
+              Position the QR code from the entry bill inside the frame to automatically load vehicle details.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc] text-[#1e293b] font-sans">
+      {showScanner && (
+        <QRScanner
+          onScan={(id) => {
+            const session = sessions.find(s => s.id === id && s.status === "active");
+            if (session) {
+              setExitId(session.vehicleNumber);
+              handleExit(session.vehicleNumber);
+            } else {
+              alert("No active session found for this token");
+              setShowScanner(false);
+            }
+          }}
+          onClose={() => setShowScanner(false)}
+        />
+      )}
       {/* Header */}
       <header className="sticky top-0 z-50 glass-card mx-2 md:mx-4 mt-4 md:mt-6 rounded-[24px] md:rounded-[32px] px-4 md:px-8 py-4 md:py-5 flex items-center justify-between border-slate-100 shadow-sm">
         <div className="flex items-center gap-3 md:gap-4">
@@ -637,6 +726,18 @@ export default function ParkingSystem() {
                         <div className="flex justify-between items-center ml-2">
                           <label className="text-[10px] font-black text-slate-500 tracking-[0.3em]">Vehicle number</label>
                           {vehicleNumber.length > 2 && (() => {
+                            const isActive = sessions.find(s => s.vehicleNumber === vehicleNumber && s.status === "active");
+                            if (isActive) {
+                              return (
+                                <div className="flex items-center gap-2 px-4 py-1.5 rounded-xl border bg-orange-50 border-orange-100 text-orange-600 animate-pulse">
+                                  <AlertCircle size={12} />
+                                  <span className="text-[9px] font-black tracking-widest uppercase">
+                                    This vehicle is already entered
+                                  </span>
+                                </div>
+                              );
+                            }
+
                             const pass = passes.find(p => p.vehicleNumber === vehicleNumber);
                             if (!pass) return null;
                             const isExpired = isBefore(new Date(pass.expiryDate), new Date());
@@ -654,7 +755,7 @@ export default function ParkingSystem() {
                           required
                           placeholder="TN 01 AB 1234"
                           value={vehicleNumber}
-                          onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
+                          onChange={(e) => setVehicleNumber(formatVehicleNumber(e.target.value))}
                           className="w-full px-10 py-8 text-4xl font-mono font-black tracking-[0.2em] bg-slate-50/50 border-2 border-slate-100 rounded-[36px] focus:bg-white focus:border-primary focus:ring-[16px] focus:ring-primary/5 transition-all outline-none text-slate-800 placeholder:text-slate-200 shadow-inner"
                         />
                       </div>
@@ -770,9 +871,16 @@ export default function ParkingSystem() {
                       <input
                         placeholder="Enter plate number..."
                         value={exitId}
-                        onChange={(e) => setExitId(e.target.value.toUpperCase())}
-                        className="w-full h-28 pl-28 pr-12 text-3xl font-mono font-black tracking-[0.2em] bg-white border-4 border-slate-100 rounded-[40px] focus:border-red-600 outline-none transition-all shadow-lg text-slate-800 placeholder:text-slate-300 z-10 relative"
+                        onChange={(e) => setExitId(formatVehicleNumber(e.target.value))}
+                        className="w-full h-28 pl-28 pr-40 text-3xl font-mono font-black tracking-[0.2em] bg-white border-4 border-slate-100 rounded-[40px] focus:border-red-600 outline-none transition-all shadow-lg text-slate-800 placeholder:text-slate-300 z-10 relative"
                       />
+                      <button
+                        onClick={() => setShowScanner(true)}
+                        className="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-24 h-16 bg-slate-900 text-white rounded-[24px] flex flex-col items-center justify-center gap-1 hover:bg-slate-800 active:scale-95 transition-all shadow-lg"
+                      >
+                        <Camera size={24} />
+                        <span className="text-[8px] font-black uppercase tracking-tighter">Scan</span>
+                      </button>
 
                       {/* Smart Suggestions Panel */}
                       {exitId.length > 0 && sessions.filter(s => s.status === "active" && (s.vehicleNumber.includes(exitId) || s.id.includes(exitId))).length > 0 && (
@@ -1123,7 +1231,7 @@ export default function ParkingSystem() {
                           required
                           placeholder="Vehicle number"
                           value={passForm.vehicleNumber}
-                          onChange={(e) => setPassForm({ ...passForm, vehicleNumber: e.target.value.toUpperCase() })}
+                          onChange={(e) => setPassForm({ ...passForm, vehicleNumber: formatVehicleNumber(e.target.value) })}
                           className="w-full bg-slate-50 border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 py-4 font-black outline-none transition-all placeholder:text-slate-300"
                         />
                       </div>
