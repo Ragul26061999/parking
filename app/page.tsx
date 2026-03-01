@@ -29,10 +29,11 @@ import {
   RefreshCw,
   User,
   Calendar,
-  Camera
+  Camera,
+  RotateCw
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5Qrcode, Html5QrcodeScanner } from "html5-qrcode";
 import { format, differenceInMinutes, addMonths, isAfter, isBefore } from "date-fns";
 import { supabase } from "@/lib/supabase";
 import { isAuthenticated, logout, getUserId } from "@/lib/auth";
@@ -437,29 +438,49 @@ export default function ParkingSystem() {
   };
 
   const QRScanner = ({ onScan, onClose }: { onScan: (data: string) => void, onClose: () => void }) => {
+    const [facingMode, setFacingMode] = useState<"user" | "environment">("environment");
+    const [isScanning, setIsScanning] = useState(false);
+
     useEffect(() => {
-      const scanner = new Html5QrcodeScanner(
-        "qr-reader",
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        /* verbose= */ false
-      );
+      const html5QrCode = new Html5Qrcode("qr-reader");
 
-      scanner.render(
-        (data) => {
-          onScan(data);
-          scanner.clear().catch(error => console.error("Failed to clear scanner", error));
-        },
-        (err) => { }
-      );
-
-      return () => {
-        // Use a more reliable way to cleanup
-        const element = document.getElementById("qr-reader");
-        if (element && element.innerHTML !== "") {
-          scanner.clear().catch(error => console.error("Cleanup error", error));
+      const startScanner = async () => {
+        try {
+          setIsScanning(true);
+          await html5QrCode.start(
+            { facingMode: facingMode },
+            {
+              fps: 10,
+              qrbox: { width: 250, height: 250 },
+            },
+            (decodedText) => {
+              onScan(decodedText);
+              html5QrCode.stop().then(() => {
+                setIsScanning(false);
+              }).catch(err => console.error("Stop error", err));
+            },
+            (errorMessage) => { }
+          );
+        } catch (err) {
+          console.error("Start error", err);
+          setIsScanning(false);
         }
       };
-    }, [onScan]);
+
+      startScanner();
+
+      return () => {
+        if (html5QrCode.isScanning) {
+          html5QrCode.stop().then(() => {
+            setIsScanning(false);
+          }).catch(err => console.error("Cleanup stop error", err));
+        }
+      };
+    }, [onScan, facingMode]);
+
+    const toggleCamera = () => {
+      setFacingMode(prev => prev === "user" ? "environment" : "user");
+    };
 
     return (
       <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
@@ -468,19 +489,43 @@ export default function ParkingSystem() {
           <div className="flex justify-between items-center mb-10">
             <div>
               <h2 className="text-3xl font-black text-slate-800">Scan Entry Token</h2>
-              <p className="text-primary text-[10px] font-black tracking-[0.3em] mt-2 text-left uppercase">Scanning active session</p>
+              <p className="text-primary text-[10px] font-black tracking-[0.3em] mt-2 text-left uppercase">
+                {facingMode === "environment" ? "Rear Camera Active" : "Front Camera Active"}
+              </p>
             </div>
-            <button onClick={onClose} className="w-12 h-12 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-500 shadow-sm transition-all focus:scale-95 active:scale-90">
-              <PlusCircle className="rotate-45" size={28} />
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={toggleCamera}
+                className="w-12 h-12 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-full hover:bg-blue-50 text-slate-400 hover:text-blue-500 shadow-sm transition-all focus:scale-95 active:scale-90"
+                title="Switch Camera"
+              >
+                <RotateCw size={24} />
+              </button>
+              <button
+                onClick={onClose}
+                className="w-12 h-12 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-500 shadow-sm transition-all focus:scale-95 active:scale-90"
+              >
+                <PlusCircle className="rotate-45" size={28} />
+              </button>
+            </div>
           </div>
-          <div id="qr-reader" className="overflow-hidden rounded-[32px] border-4 border-slate-100 bg-slate-50" />
+          <div className="relative overflow-hidden rounded-[32px] border-4 border-slate-100 bg-slate-900 aspect-square">
+            <div id="qr-reader" className="w-full h-full" />
+            {!isScanning && (
+              <div className="absolute inset-0 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+                  <p className="text-white text-[10px] font-black tracking-widest uppercase">Initializing Camera...</p>
+                </div>
+              </div>
+            )}
+          </div>
           <div className="mt-10 flex items-center gap-4 p-6 bg-blue-50/50 rounded-3xl border border-blue-100">
             <div className="p-3 bg-blue-100 rounded-2xl text-primary animate-pulse">
               <QrCode size={24} />
             </div>
             <p className="text-[10px] font-bold text-slate-500 leading-relaxed text-left">
-              Position the QR code from the entry bill inside the frame to automatically load vehicle details.
+              Position the QR code from the entry bill inside the frame. Use the switch button above to toggle between front and rear cameras.
             </p>
           </div>
         </div>
