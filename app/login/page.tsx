@@ -48,8 +48,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-            <User className="w-8 h-8 text-blue-600" />
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-white rounded-full mb-4 shadow-lg border border-blue-50 overflow-hidden p-1">
+            <img src="/istockphoto-1349223345-612x612.jpg" alt="Logo" className="w-full h-full object-cover rounded-full" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Parking Login</h1>
           <p className="text-gray-600">Enter your credentials to access the system</p>

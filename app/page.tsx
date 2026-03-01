@@ -73,7 +73,7 @@ const VEHICLE_TYPES: { type: VehicleType; icon: any; label: string }[] = [
 
 export default function ParkingSystem() {
   const router = useRouter();
-  
+
   // Check authentication on component mount
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -133,7 +133,7 @@ export default function ParkingSystem() {
           .order("created_at", { ascending: false });
 
         if (sessionError) throw sessionError;
-        
+
         // Map database fields to frontend interface
         const mappedSessions = (sessionData || []).map(session => ({
           id: session.id,
@@ -157,7 +157,7 @@ export default function ParkingSystem() {
           .order("created_at", { ascending: false });
 
         if (passError) throw passError;
-        
+
         // Map database fields to frontend interface
         const mappedPasses = (passData || []).map(pass => ({
           id: pass.id,
@@ -269,7 +269,7 @@ export default function ParkingSystem() {
 
   const createMembership = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const userId = getUserId();
     if (!userId) {
       alert("Authentication error: Please login again");
@@ -419,14 +419,14 @@ export default function ParkingSystem() {
       {/* Header */}
       <header className="sticky top-0 z-50 glass-card mx-2 md:mx-4 mt-4 md:mt-6 rounded-[24px] md:rounded-[32px] px-4 md:px-8 py-4 md:py-5 flex items-center justify-between border-slate-100 shadow-sm">
         <div className="flex items-center gap-3 md:gap-4">
-          <div className="bg-primary p-2 md:p-3 rounded-xl md:rounded-2xl text-white shadow-lg shadow-primary/20">
-            <ShieldCheck size={24} className="md:w-7 md:h-7" />
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl overflow-hidden shadow-lg shadow-primary/20 bg-white border border-slate-100 p-1">
+            <img src="/istockphoto-1349223345-612x612.jpg" alt="Logo" className="w-full h-full object-cover rounded-lg" />
           </div>
           <div>
-            <h1 className="text-lg md:text-2xl font-black tracking-tight text-slate-800">ParkGuard</h1>
+            <h1 className="text-lg md:text-2xl font-black tracking-tight text-slate-800">Parking System</h1>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-              <p className="text-[8px] md:text-[10px] text-primary font-bold uppercase tracking-[0.2em]">Active</p>
+              <p className="text-[8px] md:text-[10px] text-primary font-bold tracking-[0.2em]">Active</p>
             </div>
           </div>
         </div>
@@ -436,7 +436,7 @@ export default function ParkingSystem() {
           className="group flex items-center gap-2 bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-100 hover:border-primary/30 transition-all shadow-sm"
         >
           <Settings size={18} className="text-slate-500 group-hover:rotate-90 transition-transform duration-700" />
-          <span className="hidden md:block text-xs font-black text-slate-600 uppercase tracking-widest">Settings</span>
+          <span className="hidden md:block text-xs font-black text-slate-600 tracking-widest">Settings</span>
         </button>
 
         <button
@@ -444,7 +444,7 @@ export default function ParkingSystem() {
           className="group flex items-center gap-2 bg-red-50 px-4 py-2.5 rounded-xl border border-red-100 hover:border-red-300 transition-all shadow-sm"
         >
           <LogOut size={18} className="text-red-500 group-hover:translate-x-1 transition-transform duration-300" />
-          <span className="hidden md:block text-xs font-black text-red-600 uppercase tracking-widest">Logout</span>
+          <span className="hidden md:block text-xs font-black text-red-600 tracking-widest">Logout</span>
         </button>
       </header>
 
@@ -454,8 +454,8 @@ export default function ParkingSystem() {
           <div className="glass-card max-w-xl w-full p-0 rounded-[44px] shadow-2xl overflow-hidden border-white/50 animate-in fade-in zoom-in duration-300">
             <div className="bg-slate-50 p-10 border-b border-slate-100 flex justify-between items-center">
               <div>
-                <h2 className="text-2xl font-black text-slate-800">Matrix Configuration</h2>
-                <p className="text-primary text-[10px] font-black uppercase tracking-[0.3em] mt-2">Revenue & Policy Control</p>
+                <h2 className="text-2xl font-black text-slate-800">System Settings</h2>
+                <p className="text-primary text-[10px] font-black tracking-[0.3em] mt-2">Manage pricing and policies</p>
               </div>
               <button onClick={() => setShowSettings(false)} className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-500 shadow-sm transition-all">
                 <PlusCircle className="rotate-45" size={28} />
@@ -467,11 +467,11 @@ export default function ParkingSystem() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-primary">
                   <div className="p-2 bg-primary/5 rounded-xl"><Timer size={20} /></div>
-                  <h3 className="font-black text-sm uppercase tracking-wider">Policy: Grace Period</h3>
+                  <h3 className="font-black text-sm tracking-wider">Grace Period Policy</h3>
                 </div>
                 <div className="bg-slate-50 p-8 rounded-[32px] border border-slate-100 shadow-inner">
                   <div className="flex items-center justify-between mb-4 px-2">
-                    <label className="text-xs font-black text-secondary uppercase tracking-widest">Free Buffer Limit</label>
+                    <label className="text-xs font-black text-secondary tracking-widest">Free buffer limit</label>
                     <span className="px-5 py-2 bg-white rounded-2xl border border-slate-200 font-black text-primary text-lg">
                       {graceTimeMinutes} MIN
                     </span>
@@ -488,7 +488,7 @@ export default function ParkingSystem() {
               {/* Pricing Rules */}
               <div className="flex items-center gap-3 text-primary mb-6">
                 <div className="p-2 bg-primary/5 rounded-xl"><TrendingUp size={20} /></div>
-                <h3 className="font-black text-sm uppercase tracking-wider">Revenue: Tiered Billing</h3>
+                <h3 className="font-black text-sm tracking-wider">Pricing Rules</h3>
               </div>
 
               {/* Rules Vehicle Switcher */}
@@ -497,13 +497,13 @@ export default function ParkingSystem() {
                   <button
                     key={v.type}
                     onClick={() => setSettingsVehicleType(v.type)}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-[20px] transition-all duration-500 font-black text-[9px] uppercase tracking-widest ${settingsVehicleType === v.type
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-[20px] transition-all duration-500 font-black text-[9px] tracking-widest ${settingsVehicleType === v.type
                       ? "bg-white text-primary shadow-sm"
                       : "text-slate-400 hover:text-slate-600"
                       }`}
                   >
                     <v.icon size={14} />
-                    {v.type}
+                    {v.label}
                   </button>
                 ))}
               </div>
@@ -512,7 +512,7 @@ export default function ParkingSystem() {
                 {(pricingRules[settingsVehicleType] || []).map((rule, index) => (
                   <div key={index} className="flex items-center gap-4 p-5 bg-white rounded-[24px] border border-slate-100 shadow-sm group hover:border-primary/20 transition-all">
                     <div className="flex-1">
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-2 ml-1 text-center">Duration (Hrs)</p>
+                      <p className="text-[9px] font-black text-slate-400 tracking-tighter mb-2 ml-1 text-center">Duration (Hours)</p>
                       <input
                         type="number"
                         value={rule.hours}
@@ -526,7 +526,7 @@ export default function ParkingSystem() {
                     </div>
                     <div className="bg-slate-100 h-10 w-[1px] mt-4" />
                     <div className="flex-1">
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-2 ml-1 text-center">Amount (₹)</p>
+                      <p className="text-[9px] font-black text-slate-400 tracking-tighter mb-2 ml-1 text-center">Amount (₹)</p>
                       <input
                         type="number"
                         value={rule.amount}
@@ -556,18 +556,18 @@ export default function ParkingSystem() {
                     newRules[settingsVehicleType] = [...newRules[settingsVehicleType], { hours: 0, amount: 0 }];
                     setPricingRules(newRules);
                   }}
-                  className="w-full py-5 border-2 border-dashed border-slate-200 rounded-[28px] text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-primary/5 hover:border-primary/20 hover:text-primary transition-all group"
+                  className="w-full py-5 border-2 border-dashed border-slate-200 rounded-[28px] text-slate-400 text-[10px] font-black tracking-[0.3em] hover:bg-primary/5 hover:border-primary/20 hover:text-primary transition-all group"
                 >
-                  + APPEND {settingsVehicleType.toUpperCase()} RULE
+                  + Add {settingsVehicleType} rule
                 </button>
               </div>
             </div>
 
             <button
               onClick={() => setShowSettings(false)}
-              className="w-full h-20 bg-primary text-white font-black rounded-[30px] shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all text-lg uppercase tracking-widest border-t-2 border-white/20"
+              className="w-full h-20 bg-primary text-white font-black rounded-[30px] shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all text-lg tracking-widest border-t-2 border-white/20"
             >
-              DEPLOY SCHEMA
+              Save changes
             </button>
           </div>
         </div>
@@ -585,7 +585,7 @@ export default function ParkingSystem() {
               <button
                 key={tab.id}
                 onClick={() => { setActiveTab(tab.id as any); setCurrentBill(null); }}
-                className={`flex items-center justify-center md:justify-start gap-4 px-6 md:px-10 py-4 md:py-5 rounded-[24px] md:rounded-[32px] transition-all duration-500 font-black text-[10px] md:text-[11px] uppercase tracking-[0.2em] relative group overflow-hidden ${activeTab === tab.id
+                className={`flex items-center justify-center md:justify-start gap-4 px-6 md:px-10 py-4 md:py-5 rounded-[24px] md:rounded-[32px] transition-all duration-500 font-black text-[10px] md:text-[11px] tracking-[0.2em] relative group overflow-hidden ${activeTab === tab.id
                   ? "bg-primary text-white shadow-xl shadow-primary/25"
                   : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
                   }`}
@@ -600,21 +600,21 @@ export default function ParkingSystem() {
         <div className="min-h-[700px] relative">
           {/* Entry Module */}
           {activeTab === "entry" && (
-            <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-10 animate-in fade-in slide-in-from-bottom-12 duration-1000">
-              <div className="lg:col-span-3 space-y-8">
+            <div className="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-12 duration-1000">
+              <div className="space-y-8">
                 {!currentBill ? (
                   <div className="bg-white rounded-[56px] p-16 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.05)] border border-slate-100 relative group overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-2 bg-primary group-hover:h-3 transition-all" />
 
                     <div className="mb-12">
-                      <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4">Gate In-flow</h2>
-                      <p className="text-primary font-black uppercase text-[10px] tracking-[0.5em]">Centralized Admission Core</p>
+                      <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4">Vehicle Entry</h2>
+                      <p className="text-primary font-black text-[10px] tracking-[0.5em]">Register a new vehicle entry</p>
                     </div>
 
                     <form onSubmit={handleEntry} className="space-y-12">
                       {/* Sub-form: Vehicle Type Matrix */}
                       <div className="space-y-6">
-                        <label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.3em] ml-2">Select Unit Type</label>
+                        <label className="text-[10px] font-black text-slate-500 tracking-[0.3em] ml-2">Select vehicle type</label>
                         <div className="grid grid-cols-4 gap-4">
                           {VEHICLE_TYPES.map((v) => (
                             <button
@@ -627,7 +627,7 @@ export default function ParkingSystem() {
                                 }`}
                             >
                               <v.icon size={32} strokeWidth={2.5} />
-                              <span className="text-[9px] font-black uppercase mt-3 tracking-tighter">{v.label}</span>
+                              <span className="text-[9px] font-black mt-3 tracking-tighter">{v.label}</span>
                             </button>
                           ))}
                         </div>
@@ -635,7 +635,7 @@ export default function ParkingSystem() {
 
                       <div className="space-y-4 relative">
                         <div className="flex justify-between items-center ml-2">
-                          <label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.3em]">License Identifier</label>
+                          <label className="text-[10px] font-black text-slate-500 tracking-[0.3em]">Vehicle number</label>
                           {vehicleNumber.length > 2 && (() => {
                             const pass = passes.find(p => p.vehicleNumber === vehicleNumber);
                             if (!pass) return null;
@@ -643,8 +643,8 @@ export default function ParkingSystem() {
                             return (
                               <div className={`flex items-center gap-2 px-4 py-1.5 rounded-xl border animate-in zoom-in duration-300 ${isExpired ? "bg-red-50 border-red-100 text-red-600" : "bg-green-50 border-green-100 text-green-600"}`}>
                                 <CreditCard size={12} />
-                                <span className="text-[9px] font-black uppercase tracking-widest">
-                                  {isExpired ? "Expired Member" : "Authorized Member"}
+                                <span className="text-[9px] font-black tracking-widest">
+                                  {isExpired ? "Expired member" : "Authorized member"}
                                 </span>
                               </div>
                             );
@@ -699,7 +699,7 @@ export default function ParkingSystem() {
                                 </div>
                               </label>
                               {proofImage && (
-                                <button type="button" onClick={() => setProofImage(null)} className="px-6 bg-red-50 text-red-500 rounded-[32px] font-black text-[9px] uppercase tracking-widest border border-red-100 hover:bg-red-500 hover:text-white transition-all">Clear</button>
+                                <button type="button" onClick={() => setProofImage(null)} className="px-6 bg-red-50 text-red-500 rounded-[32px] font-black text-[9px] tracking-widest border border-red-100 hover:bg-red-500 hover:text-white transition-all">Clear</button>
                               )}
                             </div>
                           </div>
@@ -720,8 +720,8 @@ export default function ParkingSystem() {
                     <div className="w-28 h-28 bg-green-50 text-green-500 rounded-[40px] flex items-center justify-center mx-auto mb-10 shadow-inner border border-green-100 rotate-12">
                       <CheckCircle2 size={56} strokeWidth={3} />
                     </div>
-                    <h2 className="text-5xl font-black text-slate-900 mb-4 tracking-tighter">Admission Authorized</h2>
-                    <p className="text-slate-400 font-black mb-12 tracking-[0.4em] uppercase text-xs">Print Token for Vehicle Node</p>
+                    <h2 className="text-5xl font-black text-slate-900 mb-4 tracking-tighter">Entry authorized</h2>
+                    <p className="text-slate-400 font-black mb-12 tracking-[0.4em] text-xs">Print entry token</p>
 
                     <div className="bg-slate-50 p-12 rounded-[56px] w-fit mx-auto border-4 border-dashed border-slate-200 mb-12 shadow-inner">
                       <QRCodeSVG value={currentBill.id} size={280} level="H" includeMargin={false} className="opacity-90 mix-blend-multiply" />
@@ -729,75 +729,26 @@ export default function ParkingSystem() {
 
                     <div className="grid grid-cols-2 gap-6 mb-12">
                       <div className="bg-slate-50/50 p-8 rounded-[36px] border border-slate-100 text-left">
-                        <p className="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Descriptor</p>
+                        <p className="text-[10px] font-black text-slate-400 mb-2 tracking-widest">Token ID</p>
                         <p className="text-2xl font-black text-primary font-mono">{currentBill.id}</p>
                       </div>
                       <div className="bg-slate-50/50 p-8 rounded-[36px] border border-slate-100 text-left">
-                        <p className="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Entry At</p>
+                        <p className="text-[10px] font-black text-slate-400 mb-2 tracking-widest">Entry time</p>
                         <p className="text-2xl font-black text-slate-800">{format(new Date(currentBill.entryTime), "HH:mm")}</p>
                       </div>
                     </div>
 
                     <button
                       onClick={() => setCurrentBill(null)}
-                      className="w-full h-24 bg-primary text-white font-black rounded-[36px] tracking-[0.3em] uppercase text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/25 relative z-10 border-t-2 border-white/20"
+                      className="w-full h-24 bg-primary text-white font-black rounded-[36px] tracking-[0.3em] text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/25 relative z-10 border-t-2 border-white/20"
                     >
-                      Cycle Complete
+                      Done
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* Dynamic Information Panel */}
-              <div className="lg:col-span-2 space-y-8 animate-in fade-in slide-in-from-right-12 duration-1000 delay-300">
-                <div className="bg-white rounded-[40px] md:rounded-[56px] p-8 md:p-12 border border-slate-100 shadow-xl relative overflow-hidden h-fit">
-                  <div className="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full -mr-20 -mt-20 blur-3xl" />
-                  <h3 className="text-xl md:text-2xl font-black mb-8 text-slate-800">Node Metrics</h3>
-                  <div className="space-y-6 md:y-8">
-                    <div className="flex items-center justify-between p-5 md:p-6 bg-slate-50 rounded-[24px] md:rounded-[32px] border border-slate-100 shadow-inner">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-xl md:rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/20"><Car size={20} /></div>
-                        <div>
-                          <p className="text-slate-900 text-lg font-black">{sessions.filter(s => s.status === "active").length}</p>
-                          <p className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest">Active Units</p>
-                        </div>
-                      </div>
-                      <TrendingUp className="text-green-500" size={18} />
-                    </div>
 
-                    <div className="flex items-center justify-between p-5 md:p-6 bg-slate-50 rounded-[24px] md:rounded-[32px] border border-slate-100 shadow-inner">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 md:w-12 md:h-12 bg-orange-500 rounded-xl md:rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-500/20"><Gift size={20} /></div>
-                        <div>
-                          <p className="text-slate-900 text-lg font-black">{sessions.filter(s => s.isFree).length}</p>
-                          <p className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest">Exempt Units</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-[56px] p-12 border border-slate-100 shadow-xl overflow-hidden h-fit">
-                  <h3 className="text-xl font-black text-slate-800 mb-8 flex items-center gap-3">
-                    <History className="text-primary" size={20} />
-                    In-flow Stream
-                  </h3>
-                  <div className="space-y-6">
-                    {sessions.slice(0, 4).map((s, i) => (
-                      <div key={i} className="flex items-center gap-4 group">
-                        <div className={`p-4 rounded-3xl group-hover:scale-110 transition-transform ${s.status === "active" ? "bg-blue-50 text-primary" : "bg-slate-50 text-slate-400"}`}>
-                          {VEHICLE_TYPES.find(v => v.type === s.vehicleType)?.icon && React.createElement(VEHICLE_TYPES.find(v => v.type === s.vehicleType)!.icon, { size: 20 })}
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-black text-slate-800 tracking-wider uppercase">{s.vehicleNumber}</p>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">{format(new Date(s.entryTime), "HH:mm a")}</p>
-                        </div>
-                        {s.isFree && <Gift size={16} className="text-green-500" />}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
@@ -809,15 +760,15 @@ export default function ParkingSystem() {
                   <div className="inline-flex p-8 bg-red-50 text-red-500 rounded-[44px] mb-12 border-2 border-red-100 rotate-12 shadow-xl shadow-red-500/5">
                     <LogOut size={64} strokeWidth={2.5} />
                   </div>
-                  <h2 className="text-6xl font-black text-slate-900 tracking-tighter mb-4">Unit Departure</h2>
-                  <p className="text-slate-400 font-black uppercase text-xs tracking-[0.8em] mb-16">Automatic Settlement Portal</p>
+                  <h2 className="text-6xl font-black text-slate-900 tracking-tighter mb-4">Vehicle exit</h2>
+                  <p className="text-slate-400 font-black text-xs tracking-[0.8em] mb-16">Process vehicle settlement</p>
 
                   <div className="max-w-2xl mx-auto space-y-12">
                     <div className="relative group">
                       <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-primary rounded-[40px] blur opacity-5 group-hover:opacity-10 transition-opacity" />
                       <Search className="absolute left-10 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-red-500 transition-colors" size={40} />
                       <input
-                        placeholder="ENTER PLATE NO OR TICKET ID..."
+                        placeholder="Enter plate number..."
                         value={exitId}
                         onChange={(e) => setExitId(e.target.value.toUpperCase())}
                         className="w-full h-28 pl-28 pr-12 text-3xl font-mono font-black tracking-[0.2em] bg-white border-4 border-slate-100 rounded-[40px] focus:border-red-600 outline-none transition-all shadow-lg text-slate-800 placeholder:text-slate-300 z-10 relative"
@@ -859,8 +810,8 @@ export default function ParkingSystem() {
                       disabled={!exitId}
                       className="w-full h-28 bg-red-600 rounded-[40px] p-2 shadow-2xl shadow-red-600/30 active:scale-95 transition-all disabled:opacity-20 disabled:grayscale disabled:scale-100 group overflow-hidden relative"
                     >
-                      <div className="w-full h-full bg-slate-900/10 rounded-[34px] flex items-center justify-center gap-6 text-white text-2xl font-black tracking-[0.2em] uppercase border-t-2 border-white/20">
-                        Authorize Settlement <QrCode size={32} />
+                      <div className="w-full h-full bg-slate-900/10 rounded-[34px] flex items-center justify-center gap-6 text-white text-2xl font-black tracking-[0.2em] border-t-2 border-white/20">
+                        Authorize settlement <QrCode size={32} />
                       </div>
                     </button>
                   </div>
@@ -875,11 +826,11 @@ export default function ParkingSystem() {
                       <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-8 md:gap-0">
                         <div>
                           <div className="flex items-center gap-4 mb-4">
-                            <span className="text-[10px] uppercase font-black tracking-[0.4em] text-primary">Service Invoice</span>
-                            {currentBill.isFree && <span className="px-4 py-1.5 bg-green-500 text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg shadow-green-500/20">Exempted Node</span>}
+                            <span className="text-[10px] font-black tracking-[0.4em] text-primary">Service invoice</span>
+                            {currentBill.isFree && <span className="px-4 py-1.5 bg-green-500 text-white rounded-xl text-[9px] font-black tracking-widest shadow-lg shadow-green-500/20">Exempted vehicle</span>}
                           </div>
                           <h4 className="text-4xl md:text-6xl font-black mb-4 tracking-tighter text-slate-900">{currentBill.id}</h4>
-                          <p className="text-slate-400 font-black tracking-widest text-[10px] md:text-sm uppercase">Verified Autonomous Cycle</p>
+                          <p className="text-slate-400 font-black tracking-widest text-[10px] md:text-sm">Verified entry cycle</p>
                         </div>
                         <div className="bg-green-500 p-5 md:p-6 rounded-[24px] md:rounded-[32px] shadow-2xl shadow-green-500/30 border-b-4 border-black/10 self-center md:rotate-12 transition-transform hover:rotate-0">
                           <CheckCircle2 className="text-white" size={48} strokeWidth={3} />
@@ -889,18 +840,18 @@ export default function ParkingSystem() {
 
                     <div className="p-16 space-y-10 bg-white">
                       <div className="flex justify-between items-center pb-8 border-b-2 border-slate-50">
-                        <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Node Identifier</span>
+                        <span className="text-xs font-black text-slate-400 tracking-widest">Vehicle number</span>
                         <span className="text-4xl font-black text-slate-900 font-mono tracking-widest">{currentBill.vehicleNumber}</span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-12">
                         <div className="p-8 bg-slate-50/50 rounded-[40px] border border-slate-100">
-                          <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Timer size={14} /> Entry Matrix</p>
+                          <p className="text-[11px] font-black text-slate-400 tracking-widest mb-4 flex items-center gap-2"><Timer size={14} /> Entry time</p>
                           <p className="text-3xl font-black text-slate-800">{format(new Date(currentBill.entryTime), "HH:mm:ss")}</p>
                           <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase">{format(new Date(currentBill.entryTime), "dd MMM yyyy")}</p>
                         </div>
                         <div className="p-8 bg-slate-50/50 rounded-[40px] border border-slate-100 text-right">
-                          <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4 flex justify-end items-center gap-2">Exit Matrix <LogOut size={14} /></p>
+                          <p className="text-[11px] font-black text-slate-400 tracking-widest mb-4 flex justify-end items-center gap-2">Exit time <LogOut size={14} /></p>
                           <p className="text-3xl font-black text-slate-800">{format(new Date(currentBill.exitTime!), "HH:mm:ss")}</p>
                           <p className="text-[10px] text-slate-400 font-bold mt-2 uppercase">{format(new Date(currentBill.exitTime!), "dd MMM yyyy")}</p>
                         </div>
@@ -910,8 +861,8 @@ export default function ParkingSystem() {
                         <div className="flex items-center gap-5 w-full md:w-auto">
                           <div className="p-4 bg-primary/10 rounded-2xl"><Clock size={24} className="text-primary" /></div>
                           <div>
-                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Calculated Stride</p>
-                            <p className="text-xl md:text-2xl font-black">{Math.max(1, Math.ceil(currentBill.durationMinutes! / 60))} Billable Hours</p>
+                            <p className="text-[10px] font-black text-slate-400 tracking-widest">Calculated duration</p>
+                            <p className="text-xl md:text-2xl font-black">{Math.max(1, Math.ceil(currentBill.durationMinutes! / 60))} Billable hours</p>
                           </div>
                         </div>
                         <div className="text-center md:text-right w-full md:w-auto border-t md:border-t-0 md:border-l border-slate-200 pt-6 md:pt-0 md:pl-8">
@@ -934,9 +885,9 @@ export default function ParkingSystem() {
 
                   <button
                     onClick={() => setCurrentBill(null)}
-                    className="w-full mt-12 h-24 bg-primary text-white font-black rounded-[40px] shadow-[0_30px_60px_-15px_rgba(59,130,246,0.3)] hover:scale-105 active:scale-95 transition-all uppercase tracking-[0.5em] text-sm border-t-2 border-white/20"
+                    className="w-full mt-12 h-24 bg-primary text-white font-black rounded-[40px] shadow-[0_30px_60px_-15px_rgba(59,130,246,0.3)] hover:scale-105 active:scale-95 transition-all tracking-[0.5em] text-sm border-t-2 border-white/20"
                   >
-                    Generate Document
+                    Print invoice
                   </button>
                 </div>
               )}
@@ -948,16 +899,16 @@ export default function ParkingSystem() {
             <div className="max-w-7xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-12 duration-1000">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 {[
-                  { label: "Matrix Nodes", val: sessions.filter(s => s.status === "active").length, icon: Car, color: "text-blue-600", bg: "bg-blue-50" },
-                  { label: "Throughput", val: sessions.length, icon: TrendingUp, color: "text-purple-600", bg: "bg-purple-50" },
-                  { label: "Exempt Flow", val: sessions.filter(s => s.isFree).length, icon: Gift, color: "text-orange-600", bg: "bg-orange-50" },
-                  { label: "Total Yield", val: `₹${sessions.reduce((acc, curr) => acc + (curr.amount || 0), 0)}`, icon: ShieldCheck, color: "text-green-600", bg: "bg-green-50" }
+                  { label: "Active vehicles", val: sessions.filter(s => s.status === "active").length, icon: Car, color: "text-blue-600", bg: "bg-blue-50" },
+                  { label: "Total throughput", val: sessions.length, icon: TrendingUp, color: "text-purple-600", bg: "bg-purple-50" },
+                  { label: "Free entries", val: sessions.filter(s => s.isFree).length, icon: Gift, color: "text-orange-600", bg: "bg-orange-50" },
+                  { label: "Total yield", val: `₹${sessions.reduce((acc, curr) => acc + (curr.amount || 0), 0)}`, icon: ShieldCheck, color: "text-green-600", bg: "bg-green-50" }
                 ].map((stat, i) => (
                   <div key={i} className="bg-white p-12 rounded-[48px] shadow-2xl shadow-slate-200/40 border border-slate-50 relative overflow-hidden group hover:scale-[1.02] transition-all">
                     <div className={`absolute top-0 right-0 p-10 opacity-10 group-hover:scale-125 transition-transform duration-700 ${stat.color}`}>
                       <stat.icon size={80} strokeWidth={2.5} />
                     </div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-6">{stat.label}</p>
+                    <p className="text-[10px] font-black text-slate-400 tracking-[0.4em] mb-6">{stat.label}</p>
                     <h3 className={`text-5xl font-black ${stat.color} tracking-tighter`}>{stat.val}</h3>
                   </div>
                 ))}
@@ -978,7 +929,7 @@ export default function ParkingSystem() {
                           router.push('/login');
                           return;
                         }
-                        
+
                         const { error } = await supabase.from("parking_sessions").delete().eq("user_id", userId);
                         if (!error) {
                           setSessions([]);
@@ -999,13 +950,13 @@ export default function ParkingSystem() {
                   <table className="w-full text-left">
                     <thead>
                       <tr className="bg-slate-50/10 rounded-2xl">
-                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 uppercase tracking-widest">Node ID</th>
-                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 uppercase tracking-widest">Type</th>
-                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Identity</th>
-                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 uppercase tracking-widest">Check-In</th>
-                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 uppercase tracking-widest">Check-Out</th>
-                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
-                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">Settlement</th>
+                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 tracking-widest">Token ID</th>
+                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 tracking-widest">Type</th>
+                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 tracking-widest text-center">Vehicle number</th>
+                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 tracking-widest">Entry time</th>
+                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 tracking-widest">Exit time</th>
+                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 tracking-widest text-center">Status</th>
+                        <th className="px-10 py-8 text-[11px] font-black text-slate-400 tracking-widest text-right">Settlement</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
@@ -1014,7 +965,7 @@ export default function ParkingSystem() {
                           <td className="px-10 py-10">
                             <div className="flex flex-col">
                               <span className="font-mono font-black text-primary text-base mb-1">{s.id}</span>
-                              <span className="text-[9px] font-black text-slate-300 uppercase">System Descriptor</span>
+                              <span className="text-[9px] font-black text-slate-300">System identifier</span>
                             </div>
                           </td>
                           <td className="px-10 py-10">
@@ -1025,7 +976,7 @@ export default function ParkingSystem() {
                           <td className="px-10 py-10">
                             <div className="flex flex-col items-center">
                               <span className="font-black text-slate-800 tracking-[0.2em] text-lg uppercase">{s.vehicleNumber}</span>
-                              <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter mt-1">{s.vehicleType} Segment</span>
+                              <span className="text-[9px] font-black text-slate-400 tracking-tighter mt-1">{s.vehicleType} segment</span>
                             </div>
                           </td>
                           <td className="px-10 py-10">
@@ -1050,7 +1001,7 @@ export default function ParkingSystem() {
                           <td className="px-10 py-10 text-center">
                             {s.isFree ? (
                               <div className="flex flex-col items-center gap-2 group/proof">
-                                <span className="px-4 py-2 bg-green-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-green-500/20">Exempt</span>
+                                <span className="px-4 py-2 bg-green-500 text-white rounded-xl text-[10px] font-black tracking-widest shadow-lg shadow-green-500/20">Exempt</span>
                                 {s.proofImage && (
                                   <div className="relative">
                                     <ImageIcon size={14} className="text-green-500" />
@@ -1061,15 +1012,15 @@ export default function ParkingSystem() {
                                 )}
                               </div>
                             ) : (
-                              <span className="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-200">Standard</span>
+                              <span className="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl text-[10px] font-black tracking-widest border border-slate-200">Standard</span>
                             )}
                           </td>
                           <td className="px-10 py-10 text-right">
                             <div className="flex flex-col items-end">
                               <span className={`text-2xl font-black ${s.amount === 0 && s.isFree ? "text-green-600" : "text-slate-900"}`}>
-                                {s.amount !== undefined ? `₹${s.amount}` : "PENDING"}
+                                {s.amount !== undefined ? `₹${s.amount}` : "Pending"}
                               </span>
-                              {s.durationMinutes && <span className="text-[10px] font-black text-slate-300 uppercase mt-1">{Math.ceil(s.durationMinutes / 60)} UNIT BILLABLE</span>}
+                              {s.durationMinutes && <span className="text-[10px] font-black text-slate-300 mt-1">{Math.ceil(s.durationMinutes / 60)} Unit billable</span>}
                             </div>
                           </td>
                         </tr>
@@ -1147,18 +1098,18 @@ export default function ParkingSystem() {
                 <div className="lg:col-span-1">
                   <div className="bg-white rounded-[44px] p-10 border border-slate-100 shadow-xl lg:sticky lg:top-32">
                     <div className="mb-10 text-center lg:text-left">
-                      <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Pass Creator</h3>
-                      <p className="text-[10px] text-primary font-bold uppercase tracking-[0.4em] mt-1">Monthly Subscription Bridge</p>
+                      <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Create pass</h3>
+                      <p className="text-[10px] text-primary font-bold tracking-[0.4em] mt-1">Setup monthly memberships</p>
                     </div>
 
                     <form onSubmit={createMembership} className="space-y-6">
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Holder Identity</p>
+                        <p className="text-[9px] font-black text-slate-400 tracking-widest mb-3 ml-1">Holder name</p>
                         <div className="relative group">
                           <User className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
                           <input
                             required
-                            placeholder="FULL NAME..."
+                            placeholder="Full name"
                             value={passForm.holderName}
                             onChange={(e) => setPassForm({ ...passForm, holderName: e.target.value.toUpperCase() })}
                             className="w-full bg-slate-50 border-2 border-transparent focus:border-primary/20 rounded-2xl pl-14 pr-6 py-4 font-black outline-none transition-all placeholder:text-slate-300"
@@ -1167,10 +1118,10 @@ export default function ParkingSystem() {
                       </div>
 
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Plate Number</p>
+                        <p className="text-[9px] font-black text-slate-400 tracking-widest mb-3 ml-1">Plate number</p>
                         <input
                           required
-                          placeholder="VEHICLE NO..."
+                          placeholder="Vehicle number"
                           value={passForm.vehicleNumber}
                           onChange={(e) => setPassForm({ ...passForm, vehicleNumber: e.target.value.toUpperCase() })}
                           className="w-full bg-slate-50 border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 py-4 font-black outline-none transition-all placeholder:text-slate-300"
@@ -1178,7 +1129,7 @@ export default function ParkingSystem() {
                       </div>
 
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Vehicle Node</p>
+                        <p className="text-[9px] font-black text-slate-400 tracking-widest mb-3 ml-1">Vehicle type</p>
                         <div className="grid grid-cols-4 gap-3">
                           {VEHICLE_TYPES.map((v) => (
                             <button
@@ -1193,8 +1144,8 @@ export default function ParkingSystem() {
                         </div>
                       </div>
 
-                      <button type="submit" className="w-full h-20 bg-primary text-white font-black rounded-[24px] uppercase tracking-widest text-xs shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all mt-4 border-t-2 border-white/10">
-                        Generate Pass Core
+                      <button type="submit" className="w-full h-20 bg-primary text-white font-black rounded-[24px] tracking-widest text-xs shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all mt-4 border-t-2 border-white/10">
+                        Create pass
                       </button>
                     </form>
                   </div>
@@ -1204,8 +1155,8 @@ export default function ParkingSystem() {
                 <div className="lg:col-span-2 space-y-8">
                   <div className="flex flex-col md:flex-row items-center justify-between px-6 gap-6 md:gap-0">
                     <div className="text-center md:text-left">
-                      <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Active Repository</h3>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.4em] mt-1">Verified Member Network</p>
+                      <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Active passes</h3>
+                      <p className="text-[10px] text-slate-400 font-bold tracking-[0.4em] mt-1">List of authorized members</p>
                     </div>
                     <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-500 font-black border border-green-100">{passes.length}</div>
                   </div>
@@ -1223,32 +1174,32 @@ export default function ParkingSystem() {
                             <div className={`p-4 rounded-2xl ${isExpired ? "bg-red-50 text-red-500" : "bg-primary text-white shadow-lg shadow-primary/20"}`}>
                               <CreditCard size={24} />
                             </div>
-                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${isExpired ? "bg-red-100 text-red-600" : "bg-green-100 text-green-600"}`}>
-                              {isExpired ? "Subscription Halted" : "Active Node"}
+                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest ${isExpired ? "bg-red-100 text-red-600" : "bg-green-100 text-green-600"}`}>
+                              {isExpired ? "Subscription halted" : "Active node"}
                             </span>
                           </div>
 
                           <div className="space-y-4 mb-8">
                             <div>
-                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Pass Index</p>
+                              <p className="text-[9px] font-black text-slate-400 tracking-[0.2em] mb-1">Pass ID</p>
                               <p className="text-xl font-black text-slate-800 font-mono tracking-wider">{pass.id}</p>
                             </div>
                             <div>
-                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Identity Matrix</p>
+                              <p className="text-[9px] font-black text-slate-400 tracking-[0.2em] mb-1">Holder identity</p>
                               <p className="text-sm font-black text-slate-700">{pass.holderName} • {pass.vehicleNumber}</p>
                             </div>
                             <div className="flex items-center gap-2 pt-2 text-slate-400">
                               <Calendar size={14} />
-                              <p className="text-[10px] font-black uppercase tracking-widest">Valid Until: {format(new Date(pass.expiryDate), "dd MMM yyyy")}</p>
+                              <p className="text-[10px] font-black tracking-widest">Valid until: {format(new Date(pass.expiryDate), "dd MMM yyyy")}</p>
                             </div>
                           </div>
 
                           <button
                             onClick={() => rechargePass(pass.id)}
-                            className={`w-full py-4 rounded-2xl flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-[0.3em] transition-all border-2 ${isExpired ? "bg-red-600 text-white border-red-600 shadow-xl shadow-red-500/20" : "bg-white text-slate-400 border-slate-100 hover:border-primary hover:text-primary"}`}
+                            className={`w-full py-4 rounded-2xl flex items-center justify-center gap-3 font-black text-[10px] tracking-[0.3em] transition-all border-2 ${isExpired ? "bg-red-600 text-white border-red-600 shadow-xl shadow-red-500/20" : "bg-white text-slate-400 border-slate-100 hover:border-primary hover:text-primary"}`}
                           >
                             <RefreshCw size={16} className={isExpired ? "animate-spin" : ""} />
-                            Recharge Cycle
+                            Recharge membership
                           </button>
                         </div>
                       )
@@ -1256,7 +1207,7 @@ export default function ParkingSystem() {
                     {passes.length === 0 && (
                       <div className="col-span-full py-24 text-center bg-slate-50 rounded-[44px] border-2 border-dashed border-slate-200">
                         <CreditCard size={80} className="mx-auto text-slate-200 mb-6" />
-                        <p className="text-slate-400 font-black uppercase tracking-widest text-xs">No Active Memberships Found</p>
+                        <p className="text-slate-400 font-black tracking-widest text-xs">No active memberships found</p>
                       </div>
                     )}
                   </div>
@@ -1272,8 +1223,8 @@ export default function ParkingSystem() {
           <div className="flex items-center gap-6 saturate-0 opacity-50">
             <Car size={24} /> <Bike size={24} /> <Truck size={24} /> <Bus size={24} />
           </div>
-          <p className="text-[10px] font-black uppercase tracking-[1em] text-slate-500 bg-slate-100 px-10 py-4 rounded-full border border-slate-200">
-            Autonomous Operational Architecture v3.0 • Premium Build
+          <p className="text-[10px] font-black tracking-[1em] text-slate-500 bg-slate-100 px-10 py-4 rounded-full border border-slate-200">
+            Smart Parking System v3.0 • Premium Build
           </p>
         </div>
       </footer>
